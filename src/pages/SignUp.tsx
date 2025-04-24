@@ -1,16 +1,14 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Eye, EyeOff, UserPlus } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Eye, EyeOff, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { signUp } from "@/lib/auth";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -18,27 +16,16 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
       toast({
         title: "Error",
-        description: "Passwords do not match.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (!agreeTerms) {
-      toast({
-        title: "Error",
-        description: "You must agree to the terms and conditions.",
+        description: "Passwords do not match",
         variant: "destructive",
       });
       return;
@@ -56,13 +43,13 @@ const SignUp = () => {
     } else {
       toast({
         title: "Success",
-        description: "Please check your email to confirm your account.",
+        description: "Please check your email to confirm your account",
       });
     }
     
     setLoading(false);
   };
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -72,17 +59,16 @@ const SignUp = () => {
           <Card className="bg-crypto-bg-card border-crypto-bg-light">
             <CardHeader className="space-y-1 text-center">
               <div className="w-16 h-16 bg-crypto-bg-dark rounded-full flex items-center justify-center mx-auto mb-4">
-                <UserPlus className="h-8 w-8 text-crypto-green" />
+                <User className="h-8 w-8 text-crypto-green" />
               </div>
               <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
               <CardDescription>
-                Enter your details to create a new account
+                Enter your email below to create your account
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -94,7 +80,6 @@ const SignUp = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -117,12 +102,8 @@ const SignUp = () => {
                       )}
                     </button>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Password must be at least 8 characters long with a number and a special character
-                  </p>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <div className="relative">
                     <Input
                       id="confirmPassword"
@@ -146,38 +127,20 @@ const SignUp = () => {
                     </button>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="terms" 
-                    checked={agreeTerms}
-                    onCheckedChange={(checked) => setAgreeTerms(checked === true)}
-                  />
-                  <Label htmlFor="terms" className="text-sm">
-                    I agree to the{" "}
-                    <Link to="/terms" className="text-crypto-blue hover:underline">
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link to="/privacy" className="text-crypto-blue hover:underline">
-                      Privacy Policy
-                    </Link>
-                  </Label>
-                </div>
-                <Button type="submit" className="w-full">
-                  Create Account
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  disabled={loading}
+                >
+                  {loading ? "Creating account..." : "Create Account"}
                 </Button>
               </form>
-              <div className="mt-6 text-center">
+              <div className="mt-4 text-center">
                 <p className="text-sm text-muted-foreground">
                   Already have an account?{" "}
                   <Link to="/login" className="text-crypto-blue hover:underline">
                     Sign In
                   </Link>
-                </p>
-              </div>
-              <div className="mt-6 pt-6 border-t border-crypto-bg-light">
-                <p className="text-xs text-center text-muted-foreground">
-                  By creating an account, you agree to our Terms of Service and Privacy Policy, and confirm that you are at least 18 years old.
                 </p>
               </div>
             </CardContent>

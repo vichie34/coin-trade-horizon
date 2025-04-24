@@ -3,14 +3,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Eye, EyeOff, LogIn, Lock } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { signIn } from "@/lib/auth";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,7 +17,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -36,7 +34,7 @@ const Login = () => {
     
     setLoading(false);
   };
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -46,17 +44,16 @@ const Login = () => {
           <Card className="bg-crypto-bg-card border-crypto-bg-light">
             <CardHeader className="space-y-1 text-center">
               <div className="w-16 h-16 bg-crypto-bg-dark rounded-full flex items-center justify-center mx-auto mb-4">
-                <Lock className="h-8 w-8 text-crypto-blue" />
+                <LogIn className="h-8 w-8 text-crypto-blue" />
               </div>
-              <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
+              <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
               <CardDescription>
-                Enter your email and password to access your account
+                Enter your email to sign in to your account
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -68,12 +65,6 @@ const Login = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
-                    <Link to="/forgot-password" className="text-sm text-crypto-blue hover:underline">
-                      Forgot password?
-                    </Link>
-                  </div>
                   <div className="relative">
                     <Input
                       id="password"
@@ -97,16 +88,15 @@ const Login = () => {
                     </button>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="remember" />
-                  <Label htmlFor="remember" className="text-sm">Remember me for 30 days</Label>
-                </div>
-                <Button type="submit" className="w-full">
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Sign In
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  disabled={loading}
+                >
+                  {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
-              <div className="mt-6 text-center">
+              <div className="mt-4 text-center">
                 <p className="text-sm text-muted-foreground">
                   Don't have an account?{" "}
                   <Link to="/signup" className="text-crypto-blue hover:underline">

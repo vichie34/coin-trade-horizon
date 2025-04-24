@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,10 +7,13 @@ import {
   User, 
   ChevronDown
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { signOut } from "@/lib/auth";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +27,10 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  
+  const handleSignOut = async () => {
+    await signOut();
+  };
   
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-crypto-bg-dark/95 backdrop-blur-sm border-b border-crypto-bg-light" : "bg-transparent"}`}>
@@ -71,12 +77,22 @@ const Navbar = () => {
           </nav>
           
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/login">
-              <Button variant="ghost" size="sm">Sign In</Button>
-            </Link>
-            <Link to="/signup">
-              <Button variant="default" size="sm">Sign Up</Button>
-            </Link>
+            {user ? (
+              <>
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost" size="sm">Sign In</Button>
+                </Link>
+                <Link to="/signup">
+                  <Button variant="default" size="sm">Sign Up</Button>
+                </Link>
+              </>
+            )}
           </div>
           
           {/* Mobile Menu Button */}
@@ -150,20 +166,31 @@ const Navbar = () => {
               </div>
             </div>
             <div className="mt-3 px-2 space-y-1">
-              <Link 
-                to="/login" 
-                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Sign In
-              </Link>
-              <Link 
-                to="/signup" 
-                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Sign Up
-              </Link>
+              {user ? (
+                <button
+                  onClick={handleSignOut}
+                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <>
+                  <Link 
+                    to="/login" 
+                    className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link 
+                    to="/signup" 
+                    className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
