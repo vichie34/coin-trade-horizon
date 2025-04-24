@@ -1,15 +1,16 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Eye, EyeOff, UserPlus, Lock } from "lucide-react";
+import { Eye, EyeOff, UserPlus } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
+import { signUp } from "@/lib/auth";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -18,9 +19,11 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
@@ -41,14 +44,23 @@ const SignUp = () => {
       return;
     }
     
-    // This is a placeholder for actual registration logic
-    // In real implementation, this would connect to Supabase or other auth provider
-    toast({
-      title: "Registration Functionality",
-      description: "To implement actual authentication, please connect to Supabase.",
-    });
+    setLoading(true);
+    const { error } = await signUp(email, password);
     
-    console.log("Registration attempt:", email, password);
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Please check your email to confirm your account.",
+      });
+    }
+    
+    setLoading(false);
   };
   
   return (
