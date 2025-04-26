@@ -25,10 +25,31 @@ const Login = () => {
     const { error } = await signIn(email, password);
     
     if (error) {
+      // Handle specific error cases
+      if (error.message.includes("Email not confirmed")) {
+        toast({
+          title: "Email Not Confirmed",
+          description: "Please check your inbox for the confirmation email or request a new one.",
+          variant: "destructive",
+        });
+      } else if (error.message.includes("Invalid login credentials")) {
+        toast({
+          title: "Invalid Credentials",
+          description: "The email or password you entered is incorrect.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } else {
+      // Successful login is handled by AuthContext redirecting to /markets
       toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
+        title: "Success",
+        description: "You have been logged in successfully!",
       });
     }
     
@@ -96,11 +117,17 @@ const Login = () => {
                   {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
-              <div className="mt-4 text-center">
+              <div className="mt-4 text-center space-y-2">
                 <p className="text-sm text-muted-foreground">
                   Don't have an account?{" "}
                   <Link to="/signup" className="text-crypto-blue hover:underline">
                     Sign Up
+                  </Link>
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Having trouble signing in?{" "}
+                  <Link to="/signup" className="text-crypto-blue/90 hover:underline">
+                    Create a new account
                   </Link>
                 </p>
               </div>

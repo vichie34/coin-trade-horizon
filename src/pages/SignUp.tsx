@@ -17,6 +17,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,14 +41,15 @@ const SignUp = () => {
         description: error.message,
         variant: "destructive",
       });
+      setLoading(false);
     } else {
+      setEmailSent(true);
       toast({
         title: "Success",
         description: "Please check your email to confirm your account",
       });
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   return (
@@ -67,82 +69,113 @@ const SignUp = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="name@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-crypto-bg-dark border-crypto-bg-light"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="bg-crypto-bg-dark border-crypto-bg-light pr-10"
-                      required
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                      onClick={() => setShowPassword(!showPassword)}
+              {emailSent ? (
+                <div className="space-y-4 text-center">
+                  <div className="p-4 bg-green-100/10 rounded-md border border-green-200/20">
+                    <h3 className="font-medium text-lg mb-2">Verification Email Sent!</h3>
+                    <p className="text-muted-foreground">
+                      We've sent a confirmation link to <span className="font-medium">{email}</span>.
+                    </p>
+                    <p className="text-muted-foreground mt-2">
+                      Please check your inbox and click the link to confirm your email.
+                    </p>
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-4">
+                    <p>Didn't receive an email?</p>
+                    <p className="mt-1">
+                      • Check your spam folder<br />
+                      • Make sure the email address is correct<br />
+                      • The confirmation link expires after 10 minutes
+                    </p>
+                    <Button 
+                      variant="link" 
+                      className="mt-2 p-0 h-auto"
+                      onClick={() => setEmailSent(false)}
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
+                      Try again with a different email
+                    </Button>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="bg-crypto-bg-dark border-crypto-bg-light pr-10"
-                      required
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              ) : (
+                <>
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="name@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="bg-crypto-bg-dark border-crypto-bg-light"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="bg-crypto-bg-dark border-crypto-bg-light pr-10"
+                          required
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="relative">
+                        <Input
+                          id="confirmPassword"
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className="bg-crypto-bg-dark border-crypto-bg-light pr-10"
+                          required
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <Button 
+                      type="submit" 
+                      className="w-full"
+                      disabled={loading}
                     >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
+                      {loading ? "Creating account..." : "Create Account"}
+                    </Button>
+                  </form>
+                  <div className="mt-4 text-center">
+                    <p className="text-sm text-muted-foreground">
+                      Already have an account?{" "}
+                      <Link to="/login" className="text-crypto-blue hover:underline">
+                        Sign In
+                      </Link>
+                    </p>
                   </div>
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full"
-                  disabled={loading}
-                >
-                  {loading ? "Creating account..." : "Create Account"}
-                </Button>
-              </form>
-              <div className="mt-4 text-center">
-                <p className="text-sm text-muted-foreground">
-                  Already have an account?{" "}
-                  <Link to="/login" className="text-crypto-blue hover:underline">
-                    Sign In
-                  </Link>
-                </p>
-              </div>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
