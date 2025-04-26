@@ -46,11 +46,12 @@ const Login = () => {
         });
       }
     } else {
-      // Successful login is handled by AuthContext redirecting to /markets
+      // Successful login - redirect to dashboard instead of markets
       toast({
         title: "Success",
         description: "You have been logged in successfully!",
       });
+      navigate("/dashboard");
     }
     
     setLoading(false);

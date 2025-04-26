@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,9 @@ import {
   Menu, 
   X, 
   User, 
-  ChevronDown
+  ChevronDown,
+  LayoutDashboard,
+  Shield
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/auth";
@@ -14,6 +17,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(true); // In a real app, this would be determined by user role
   
   useEffect(() => {
     const handleScroll = () => {
@@ -56,6 +60,16 @@ const Navbar = () => {
             <Link to="/earn" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors">
               Earn
             </Link>
+            {user && (
+              <Link to="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors">
+                Dashboard
+              </Link>
+            )}
+            {user && isAdmin && (
+              <Link to="/admin" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors">
+                Admin
+              </Link>
+            )}
             <div className="relative group">
               <button className="flex items-center text-sm font-medium text-muted-foreground hover:text-white transition-colors">
                 More <ChevronDown className="ml-1 h-4 w-4" />
@@ -82,6 +96,12 @@ const Navbar = () => {
                 <Button variant="ghost" size="sm" onClick={handleSignOut}>
                   Sign Out
                 </Button>
+                <Link to="/dashboard">
+                  <Button variant="default" size="sm">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Button>
+                </Link>
               </>
             ) : (
               <>
@@ -134,6 +154,26 @@ const Navbar = () => {
             >
               Earn
             </Link>
+            {user && (
+              <Link 
+                to="/dashboard" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <LayoutDashboard className="inline-block h-5 w-5 mr-2" />
+                Dashboard
+              </Link>
+            )}
+            {user && isAdmin && (
+              <Link 
+                to="/admin" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Shield className="inline-block h-5 w-5 mr-2" />
+                Admin Panel
+              </Link>
+            )}
             <Link 
               to="/about" 
               className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
@@ -167,12 +207,21 @@ const Navbar = () => {
             </div>
             <div className="mt-3 px-2 space-y-1">
               {user ? (
-                <button
-                  onClick={handleSignOut}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
-                >
-                  Sign Out
-                </button>
+                <>
+                  <Link 
+                    to="/dashboard" 
+                    className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-white hover:bg-crypto-bg-light"
+                  >
+                    Sign Out
+                  </button>
+                </>
               ) : (
                 <>
                   <Link 

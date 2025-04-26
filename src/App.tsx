@@ -11,6 +11,8 @@ import SignUp from "./pages/SignUp";
 import Markets from "./pages/Markets";
 import Trade from "./pages/Trade";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,8 @@ const App = () => (
             <Route path="/signup" element={<SignUp />} />
             <Route path="/markets" element={<Markets />} />
             <Route path="/trade" element={<Trade />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </TooltipProvider>
